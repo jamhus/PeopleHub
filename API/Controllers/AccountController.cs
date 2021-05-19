@@ -21,22 +21,40 @@ namespace API.Controllers
 
         [HttpPost("register")]
 
-        public async Task<ActionResult<ApplicationUser>> Register(RegisterDto model)
+        public async Task<ActionResult<ApplicationUser>> Register(RegisterDto registerDto)
         {
 
-            if (await UserExists(model.Username)) return BadRequest("Username already exist");
+            if (await UserExists(registerDto.Username)) return BadRequest("Username already exist");
             
             using var hmac = new HMACSHA512();
 
             var user = new ApplicationUser
             {
-                UserName = model.Username.ToLower(),
-                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(model.Password)),
+                UserName = registerDto.Username.ToLower(),
+                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
                 PasswordSalt = hmac.Key
             };
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
+            return Ok(user);
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<ApplicationUser>> Login(LoginDto loginDto)
+        {
+            var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == loginDto.Username);
+            if (user == null) return Unauthorized("Invalid username");
+
+            using var hmac = new HMACSHA512(user.PasswordSalt);
+
+            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
+
+            for (int i = 0; i < computedHash.Length; i++)
+            {
+                if (computedHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid password");
+            }
+
             return Ok(user);
         }
 
