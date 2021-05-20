@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
     <div class="container">
         <a class="navbar-brand" href="#">People hub</a>
-        <ul class="navbar-nav mr-auto">
+        <ul *ngIf="loggedIn" class="navbar-nav mr-auto">
             <li class="nav-item">
             <a class="nav-link" href="#">Matches</a>
             </li>
@@ -12,8 +12,21 @@
             <a class="nav-link" href="#">Messages</a>
             </li>
         </ul>
-        <form #loginForm="ngForm" (ngSubmit)="login()" autocomplete="off" class="form-inline mt-2 mt-md-0">
+
+        <div *ngIf="loggedIn" class="btn-group" dropdown>
+            <a class="dropdown-toggle text-light" dropdownToggle>Welcome user</a>
+
+            <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu mt-3"
+                role="menu" aria-labelledby="button-basic">
+              <li role="menuitem"><a class="dropdown-item">Edit profile</a></li>
+              <li class="divider dropdown-divider"></li>
+              <li role="menuitem"><a class="dropdown-item"  (click)="logout()">Logout</a></li>
+            </ul>
+          </div>
+
+        <form *ngIf="!loggedIn" #loginForm="ngForm" (ngSubmit)="login()" autocomplete="off" class="form-inline mt-2 mt-md-0">
             <input
+            
                 name="username"
                 [(ngModel)]="model.username" 
                 class="form-control mr-sm-2" 
