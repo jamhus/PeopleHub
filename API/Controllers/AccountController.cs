@@ -2,10 +2,8 @@
 using API.DTOS;
 using API.Interfaces;
 using API.Models;
-using API.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
