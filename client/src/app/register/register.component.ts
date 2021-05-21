@@ -1,27 +1,29 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { AccountService } from '../_services/account.service';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent implements OnInit {
-
-  @Input() usersFromHomeComponent: any;
   @Output() cancelRegisterInHome = new EventEmitter();
   model: any = {};
 
-  constructor() { }
+  constructor(private AccountService: AccountService) {}
 
-  ngOnInit(): void {
+  ngOnInit(): void {}
+
+  register() {
+    this.AccountService.register(this.model).subscribe(
+      (res) => {
+        this.cancel();
+      },
+      (err) => console.log(err)
+    );
   }
 
-  register(){
-    console.log(this.model);
-  }
-
-  cancel(){
+  cancel() {
     this.cancelRegisterInHome.emit(false);
   }
-
 }
