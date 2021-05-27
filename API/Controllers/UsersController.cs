@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
+    [Authorize]
     public class UsersController : BaseApiController
     {
         private readonly DataContext _context;
@@ -26,7 +27,6 @@ namespace API.Controllers
         }
 
         // GET: api/Users/5
-        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<ApplicationUser>> GetApplicationUser(int id)
         {
