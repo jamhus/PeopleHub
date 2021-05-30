@@ -20,6 +20,7 @@ import { MemberDetailComponent } from './members/member-detail/member-detail.com
 import { NotFoundComponent } from './errors/not-found/not-found.component';
 import { ServerErrorComponent } from './errors/server-error/server-error.component';
 import { MemberCardComponent } from './members/member-card/member-card.component';
+import { MemberEditComponent } from './members/member-edit/member-edit.component';
 
 
 @NgModule({
@@ -36,6 +37,7 @@ import { MemberCardComponent } from './members/member-card/member-card.component
     NotFoundComponent,
     ServerErrorComponent,
     MemberCardComponent,
+    MemberEditComponent,
   ],
   imports: [
     FormsModule,
