@@ -32,7 +32,10 @@ export class ErrorInterceptor implements HttpInterceptor {
                 }
                 throw modalStateErrors.flat(); // detta behöver ec2019 i tsconfig
               } else {
-                this.toastr.error(error.error === null ? "Bad request" : error.error, error.status)
+                this.toastr.error(
+                  error.error === null ? 'Bad request' : error.error,
+                  error.status
+                );
               }
               break;
 
