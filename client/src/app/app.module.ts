@@ -1,3 +1,4 @@
+import { LoadingInterceptor } from './_interceptors/loading.interceptor';
 import { JwtInterceptor } from './_interceptors/jwt.interceptor';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -49,7 +50,8 @@ import { MemberEditComponent } from './members/member-edit/member-edit.component
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS,useClass: ErrorInterceptor,multi: true},
-    {provide: HTTP_INTERCEPTORS,useClass: JwtInterceptor,multi: true}
+    {provide: HTTP_INTERCEPTORS,useClass: JwtInterceptor,multi: true},
+    {provide: HTTP_INTERCEPTORS,useClass: LoadingInterceptor,multi: true}
 
   ],
   bootstrap: [AppComponent]
