@@ -11,7 +11,10 @@ export class RegisterComponent implements OnInit {
   @Output() cancelRegisterInHome = new EventEmitter();
   model: any = {};
 
-  constructor(private AccountService: AccountService, private toastr: ToastrService) {}
+  constructor(
+    private AccountService: AccountService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {}
 
@@ -22,7 +25,7 @@ export class RegisterComponent implements OnInit {
       },
       (err) => {
         this.toastr.error(err.error);
-        console.log(err)
+        console.log(err);
       }
     );
   }

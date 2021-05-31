@@ -1,6 +1,4 @@
-﻿using API.Extensions;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 
 namespace API.Models
@@ -22,10 +20,5 @@ namespace API.Models
         public string City { get; set; }
         public string Country { get; set; }
         public ICollection<Photo> Photos { get; set; }
-
-        //public int GetAge()
-        //{
-        //    return DateOfBirth.CalculateAge();
-        //}
     }
 }

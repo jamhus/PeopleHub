@@ -1,10 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using API.Data;
-using API.Models;
 using Microsoft.AspNetCore.Authorization;
 using API.Interfaces;
 using API.DTOS;
@@ -18,7 +14,7 @@ namespace API.Controllers
     {
         private readonly IUserRepository _repo;
         private readonly IMapper _mapper;
-        public UsersController(IUserRepository repo,IMapper mapper)
+        public UsersController(IUserRepository repo, IMapper mapper)
         {
             _repo = repo;
             _mapper = mapper;
@@ -36,7 +32,7 @@ namespace API.Controllers
         [HttpGet("{username}")]
         public async Task<ActionResult<MemberDto>> GetUserByUsername(string username)
         {
-            return await _repo.GetMemberAsync(username);           
+            return await _repo.GetMemberAsync(username);
         }
 
         [HttpPut]
