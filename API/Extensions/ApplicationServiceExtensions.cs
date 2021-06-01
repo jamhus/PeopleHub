@@ -13,8 +13,9 @@ namespace API.Extensions
     {
         public static IServiceCollection AddApplictionServices(this IServiceCollection services ,IConfiguration config)
         {
+            services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
             services.AddScoped<ITokenService, TokenService>();
-
+            services.AddScoped<IPhotoService, PhotoService>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
