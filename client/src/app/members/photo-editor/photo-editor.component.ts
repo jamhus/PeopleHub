@@ -1,3 +1,4 @@
+import { MemberService } from './../../_services/member.service';
 import { Photo } from './../../_models/photo';
 import { AccountService } from './../../_services/account.service';
 import { environment } from './../../../environments/environment';
@@ -18,14 +19,29 @@ export class PhotoEditorComponent implements OnInit {
   hasBaseDropZoneOver = false;
   baseUrl = environment.apiUrl;
   user: User;
-  constructor(private AccountService: AccountService) {
-    this.AccountService.currentUser$
+  constructor(
+    private accountService: AccountService,
+    private memberService: MemberService
+  ) {
+    this.accountService.currentUser$
       .pipe(take(1))
       .subscribe((user) => (this.user = user));
   }
 
   ngOnInit(): void {
     this.initializeUploader();
+  }
+
+  setMain(photo: Photo) {
+    this.memberService.setMainPhoto(photo.id).subscribe(() => {
+      this.user.photoUrl = photo.url;
+      this.accountService.setCurrentUser(this.user);
+      this.member.photoUrl = photo.url;
+      this.member.photos.forEach((p) => {
+        if (p.isMain) p.isMain = false;
+        if (p.id === photo.id) p.isMain = true;
+      });
+    });
   }
 
   fileOverBase(e: any) {

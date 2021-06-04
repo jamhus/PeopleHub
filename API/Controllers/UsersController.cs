@@ -9,6 +9,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using API.Extensions;
 using API.Models;
+using System.Linq;
 
 namespace API.Controllers
 {
@@ -81,6 +82,26 @@ namespace API.Controllers
                 return CreatedAtRoute("GetUser", new { username = user.UserName} ,_mapper.Map<PhotoDto>(photo));
             }
             return BadRequest("problem adding photo");
+        }
+
+        [HttpPut("set-main-photo/{photoId}")]
+
+        public async Task<ActionResult> SetMainPhoto(int photoId)
+        {
+            var user = await _repo.GetUserByUsernameAsync(User.GetUserName());
+
+            var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
+
+            if (photo.IsMain) return BadRequest("This is already a main photo");
+
+            var currentMain = user.Photos.FirstOrDefault(x => x.IsMain);
+
+            currentMain.IsMain = false;
+            photo.IsMain = true;
+
+            if (await _repo.SaveAllAsync()) return NoContent();
+            return BadRequest("Failed to set main photo");
+
         }
 
     }
