@@ -14,7 +14,12 @@ namespace API.Extensions
         {
             var paginationHeader = new PaginationHeader(currentPage, itemsPerPage, totalItems, totalPages);
 
-            resonse.Headers.Add("Pagination", JsonSerializer.Serialize(paginationHeader));
+            var options = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            };
+
+            resonse.Headers.Add("Pagination", JsonSerializer.Serialize(paginationHeader,options));
             resonse.Headers.Add("Access-Control-Expose-Headers", "Pagination");
         }
     }

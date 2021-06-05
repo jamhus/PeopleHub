@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Authorization;
 using API.Interfaces;
 using API.DTOS;
 using AutoMapper;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using API.Extensions;
 using API.Models;
 using System.Linq;
+using API.Helpers;
 
 namespace API.Controllers
 {
@@ -29,9 +29,13 @@ namespace API.Controllers
 
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers([FromQuery] UserParams userParams)
         {
-            return Ok(await _repo.GetMembersAsync());
+            var users = await _repo.GetMembersAsync(userParams);
+
+            Response.AddPaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
+
+            return Ok(users);
         }
 
         // GET: api/Users/khalaf
