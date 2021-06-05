@@ -4,11 +4,11 @@ import { AccountService } from '../_services/account.service';
 import {
   AbstractControl,
   FormBuilder,
-  FormControl,
   FormGroup,
   ValidatorFn,
   Validators,
 } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -17,14 +17,14 @@ import {
 })
 export class RegisterComponent implements OnInit {
   @Output() cancelRegisterInHome = new EventEmitter();
-  model: any = {};
   registerForm: FormGroup;
   maxDate: Date;
+  validationErrors: string[] = [];
 
   constructor(
     private AccountService: AccountService,
-    private toastr: ToastrService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -60,13 +60,12 @@ export class RegisterComponent implements OnInit {
   }
 
   register() {
-    this.AccountService.register(this.model).subscribe(
+    this.AccountService.register(this.registerForm.value).subscribe(
       (res) => {
-        this.cancel();
+        this.router.navigateByUrl('/members');
       },
       (err) => {
-        this.toastr.error(err.error);
-        console.log(err);
+        this.validationErrors = err;
       }
     );
   }
