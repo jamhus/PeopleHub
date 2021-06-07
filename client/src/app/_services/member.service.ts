@@ -1,3 +1,4 @@
+import { UserParams } from './../_models/userParams';
 import { PaginatedResult } from './../_modules/Pagination';
 import { map } from 'rxjs/operators';
 import { Member } from './../_models/member';
@@ -12,25 +13,38 @@ import { of } from 'rxjs';
 export class MemberService {
   baseUrl = environment.apiUrl;
   members: Member[] = [];
-  paginatedResult: PaginatedResult<Member[]> = new PaginatedResult<Member[]>();
 
   constructor(private http: HttpClient) {}
 
-  getMembers(page?: number, itemsPerPage?: number) {
-    let params = new HttpParams();
-    if (page != null && itemsPerPage != null) {
-      params = params.append('pageNumber', page.toString());
-      params = params.append('pageSize', itemsPerPage.toString());
-    }
-    return this.http.get<Member[]>(`${this.baseUrl}users/`,{observe: 'response',params}).pipe(
+  getMembers(userParams:UserParams) {
+    let params = this.getPaginationHeaders(userParams.pageNumber, userParams.pageSize);
+
+    params.append('minAge', userParams.minAge.toString());
+    params.append('maxAge', userParams.maxAge.toString());
+    params.append('gender', userParams.gender);
+
+    return this.getPaginatedResults<Member[]>(`${this.baseUrl}users/`,params);
+  }
+
+  private getPaginatedResults<T>(url: string, params: HttpParams) {
+    const paginatedResult: PaginatedResult<T> = new PaginatedResult<T>();
+    
+    return this.http.get<T>(url, { observe: 'response', params }).pipe(
       map(response => {
-        this.paginatedResult.result = response.body;
-        if(response.headers.get('Pagination')!==null){
-          this.paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
+        paginatedResult.result = response.body;
+        if (response.headers.get('Pagination') !== null) {
+          paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
         }
-        return this.paginatedResult;
+        return paginatedResult;
       })
     );
+  }
+
+  private getPaginationHeaders(pageNumber : number, PageSize :number){
+    let params = new HttpParams();
+      params = params.append('pageNumber',pageNumber.toString());
+      params = params.append('pageSize', PageSize.toString());
+      return params;
   }
 
   getMember(username: string) {
