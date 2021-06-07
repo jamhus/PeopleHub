@@ -5,7 +5,7 @@ import { Member } from './../_models/member';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { of } from 'rxjs';
+import { of, pipe } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -13,10 +13,14 @@ import { of } from 'rxjs';
 export class MemberService {
   baseUrl = environment.apiUrl;
   members: Member[] = [];
+  memberCache = new Map();
 
   constructor(private http: HttpClient) {}
 
   getMembers(userParams: UserParams) {
+    var response = this.memberCache.get(Object.values(userParams).join('-'));
+    if (response) return of(response);
+
     let params = this.getPaginationHeaders(
       userParams.pageNumber,
       userParams.pageSize
@@ -26,7 +30,15 @@ export class MemberService {
     params = params.append('gender', userParams.gender);
     params = params.append('orderBy', userParams.orderBy);
 
-    return this.getPaginatedResults<Member[]>(`${this.baseUrl}users/`, params);
+    return this.getPaginatedResults<Member[]>(
+      `${this.baseUrl}users/`,
+      params
+    ).pipe(
+      map((response) => {
+        this.memberCache.set(Object.values(userParams).join('-'), response);
+        return response;
+      })
+    );
   }
 
   private getPaginatedResults<T>(url: string, params: HttpParams) {
