@@ -1,6 +1,6 @@
 import { UserParams } from './../_models/userParams';
 import { PaginatedResult } from './../_modules/Pagination';
-import { map } from 'rxjs/operators';
+import { map, retryWhen } from 'rxjs/operators';
 import { Member } from './../_models/member';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -64,10 +64,10 @@ export class MemberService {
   }
 
   getMember(username: string) {
-    const member = this.members.find((x) => x.userName === username);
-    if (member !== undefined) {
-      return of(member);
-    }
+    const member = [...this.memberCache.values()]
+      .reduce((arr, elem) => arr.concat(elem.result), [])
+      .find((member: Member) => member.userName === username);
+      if (member) return of(member);
     return this.http.get<Member>(`${this.baseUrl}users/${username}`);
   }
 
