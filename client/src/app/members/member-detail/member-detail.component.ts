@@ -76,9 +76,12 @@ export class MemberDetailComponent implements OnInit {
 
   onTabActivated(data: TabDirective) {
     this.activeTab = data;
-
     if (this.activeTab.heading === 'Messages' && this.messages.length === 0) {
       this.loadMessages();
     }
+  }
+
+  selectTab(tabId: number){
+    this.memeberTabs.tabs[tabId].active = true;
   }
 }
