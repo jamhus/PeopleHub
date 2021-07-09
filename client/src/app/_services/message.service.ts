@@ -32,7 +32,6 @@ export class MessageService {
   }
 
   deleteMessage(id:number){
-    console.log(id,"s")
     return this.http.delete(`${this.baseUrl}messages/${id}`);
   }
 }
