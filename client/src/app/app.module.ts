@@ -27,6 +27,7 @@ import { TextInputComponent } from './_forms/text-input/text-input.component';
 import { DateInputComponent } from './_forms/date-input/date-input.component';
 import { MemberMessageesComponent } from './members/member-messagees/member-messagees.component';
 import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
+import { HasRoleDirective } from './_directives/has-role.directive';
 
 
 @NgModule({
@@ -49,6 +50,7 @@ import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
     DateInputComponent,
     MemberMessageesComponent,
     AdminPanelComponent,
+    HasRoleDirective,
   ],
   imports: [
     FormsModule,
